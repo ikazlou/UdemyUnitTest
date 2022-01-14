@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CharacterTest.cs" />
     <Compile Include="SerialPortParserTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -54,8 +55,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\arch\UnitTestingCourse\UnitTestingCourse\Business.csproj">
-      <Project>{F7788413-F652-4BD2-A16A-587360BC630E}</Project>
+    <ProjectReference Include="..\..\src\Bussines\Business.csproj">
+      <Project>{f7788413-f652-4bd2-a16a-587360bc630e}</Project>
       <Name>Business</Name>
     </ProjectReference>
   </ItemGroup>

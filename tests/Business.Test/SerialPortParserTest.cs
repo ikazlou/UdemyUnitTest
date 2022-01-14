@@ -1,5 +1,4 @@
-﻿using Business;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using System;
 
 namespace Business.Tests
