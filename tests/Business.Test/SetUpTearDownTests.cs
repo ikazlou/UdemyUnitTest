@@ -1,46 +1,28 @@
-﻿using Business;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using NUnit.Framework.Internal;
 using System;
 
-namespace Business2.Test
+namespace Business.Tests
 {
     [TestFixture]
-    public class CharacterTest
+    public class SetUpTearDownTests
     {
-        // Arrange
-        // Act
-        // Assert
+        private Character _character;
 
-        #region Check Name
-        [Test]
-        public void Should_Set_Name()
+        [SetUp] // Этот атрибут указывает механизму исполнения NUnit
+                // что-бы он исполнялся каждый раз перерд исполнение каждого метода
+        public void Setup()
         {
-            // Arrange
-            const string expectedName = "John";
-
-            // Act
-            Character c = new Character(Business.Type.Elf, expectedName);
-
-            // Assert
-            Assert.That(c.Name, Is.EqualTo(expectedName));
-            Assert.That(c.Name, Is.Not.Empty);
-            Assert.That(c.Name, Contains.Substring("ohn"));
+            _character = new Character(Type.Elf);
+        }
+         
+        [TearDown] // Этот атрибут для очистки неуправляеммыми ресурсами
+        public void Teardown()
+        {
+            _character.Dispose();
+            _character = null;
         }
 
-        [Test]
-        public void Should_SetName_CaseInvensitive()
-        {
-            // Arrange
-            const string expectedUpperCase = "JOHN";
-            const string expectedLowerCase = "john";
-
-            // Act
-            Character c = new Character(Business.Type.Elf, expectedUpperCase);
-
-            // Assert
-            Assert.That(c.Name, Is.EqualTo(expectedUpperCase).IgnoreCase);
-        }
-        #endregion
         #region Character Number params checks
 
         [Test]
@@ -48,12 +30,12 @@ namespace Business2.Test
         {
             // Arrange
             const int expectedHealth = 100;
-            
+
             // Act
-            Character c = new Character(Business.Type.Elf);
+
 
             // Assert
-            Assert.That(c.Health, Is.EqualTo(expectedHealth));
+            Assert.That(_character.Health, Is.EqualTo(expectedHealth));
         }
 
         [Test]
@@ -63,10 +45,9 @@ namespace Business2.Test
             const int expectedWear = 15;
 
             // Act
-            Character c = new Character(Business.Type.Elf);
 
             // Assert
-            Assert.That(c.Wear, Is.EqualTo(expectedWear));
+            Assert.That(_character.Wear, Is.EqualTo(expectedWear));
         }
 
         [Test]
@@ -76,10 +57,10 @@ namespace Business2.Test
             const double expectedSpeedOrk = 1.4;
 
             // Act
-            Character c = new Character(Business.Type.Ork);
+            Character character = new Character(Type.Ork);
 
             // Assert
-            Assert.That(c.Speed, Is.EqualTo(expectedSpeedOrk));
+            Assert.That(character.Speed, Is.EqualTo(expectedSpeedOrk));
         }
 
         [Test]
@@ -89,21 +70,20 @@ namespace Business2.Test
             const double expectedSpeedElf = 1.7;
 
             // Act
-            Character c = new Character(Business.Type.Elf);
 
             // Assert
-            Assert.That(c.Speed, Is.EqualTo(expectedSpeedElf));
+            Assert.That(_character.Speed, Is.EqualTo(expectedSpeedElf));
         }
 
         [Test]
         public void Ork_SpeedIsCorrecrWithTolerance()
         {
             // Arrange
-            const double expectedSpeed = 0.3 + 1.1; 
+            const double expectedSpeed = 0.3 + 1.1;
             // Becouse 1.4 not equal to 1.1 + 0.3
 
             // Act
-            Character c = new Character(Business.Type.Ork);
+            Character c = new Character(Type.Ork);
 
             // Assert
             //Assert.That(c.Speed, Is.EqualTo(expectedSpeed)); // False
@@ -118,24 +98,22 @@ namespace Business2.Test
         {
             // Arrange
             // Act
-            Character c = new Character(Business.Type.Elf);
 
             // Assert
-            Assert.That(c.Name, Is.Null);
+            Assert.That(_character.Name, Is.Null);
         }
 
         [Test]
         public void IsDead_KillCharacter_ReturnTrue()
         {
             // Arrange
-            Character c = new Character(Business.Type.Elf);
 
             // Act
-            c.Damage(500);
+            _character.Damage(500);
 
             // Assert
-            Assert.That(c.IsDead, Is.True);
-            Assert.IsTrue(c.IsDead);
+            Assert.That(_character.IsDead, Is.True);
+            Assert.IsTrue(_character.IsDead);
         }
 
         #endregion
@@ -145,25 +123,24 @@ namespace Business2.Test
         public void CollectionTeests()
         {
             // Arrange
-            var c = new Character(Business.Type.Elf);
 
             // Act
-            c.Weaponry.Add("Knife");
-            c.Weaponry.Add("Pistol");
+            _character.Weaponry.Add("Knife");
+            _character.Weaponry.Add("Pistol");
 
             // Assert
-            Assert.That(c.Weaponry, Is.All.Not.Empty);
-            Assert.That(c.Weaponry, Contains.Item("Knife"));
-            Assert.That(c.Weaponry, Has.Exactly(2).Length);
-            Assert.That(c.Weaponry, Has.Exactly(1).EndsWith("tol"));
-            Assert.That(c.Weaponry, Is.Unique);
-            Assert.That(c.Weaponry, Is.Ordered);
+            Assert.That(_character.Weaponry, Is.All.Not.Empty);
+            Assert.That(_character.Weaponry, Contains.Item("Knife"));
+            Assert.That(_character.Weaponry, Has.Exactly(2).Length);
+            Assert.That(_character.Weaponry, Has.Exactly(1).EndsWith("tol"));
+            Assert.That(_character.Weaponry, Is.Unique);
+            Assert.That(_character.Weaponry, Is.Ordered);
 
             var c2 = new Character(Business.Type.Elf);
             c2.Weaponry.Add("Knife");
             c2.Weaponry.Add("Pistol");
 
-            Assert.That(c.Weaponry, Is.EquivalentTo(c2.Weaponry));
+            Assert.That(_character.Weaponry, Is.EquivalentTo(c2.Weaponry));
         }
         #endregion
         #region Reference Equality
@@ -186,10 +163,9 @@ namespace Business2.Test
         {
             // Arrange
             // Act
-            object character = new Character(Business.Type.Elf);
 
             // Assert
-            Assert.That(character, Is.TypeOf<Character>());
+            Assert.That(_character, Is.TypeOf<Character>());
         }
         #endregion
         #region Range
@@ -198,10 +174,9 @@ namespace Business2.Test
         {
             // Arrange
             // Act
-            Character c = new Character(Business.Type.Elf);
 
             // Assert
-            Assert.That(c.Armor, Is.GreaterThan(30).And.LessThan(100));
+            Assert.That(_character.Armor, Is.GreaterThan(30).And.LessThan(100));
         }
         #endregion
         #region Exeptions
@@ -210,12 +185,40 @@ namespace Business2.Test
         {
             // Arrange
             // Act
-            var c = new Character(Business.Type.Elf);
 
             // Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => c.Damage(1001));
-            Assert.That(() => c.Damage(1001), Throws.TypeOf<ArgumentOutOfRangeException>());
+            Assert.Throws<ArgumentOutOfRangeException>(() => _character.Damage(1001));
+            Assert.That(() => _character.Damage(1001), Throws.TypeOf<ArgumentOutOfRangeException>());
         }
+        #endregion
+
+        #region Problem private field
+        [Test]
+        public void Damage_100ToElf_Return_45Health()
+        {
+            // Arrange
+            var expactedHealth = 45;
+
+            // Act
+            _character.Damage(100);
+
+            // Assert
+            Assert.That(_character.Health, Is.EqualTo(expactedHealth));
+        }
+
+        [Test]
+        public void Damage_80ToElf_Return_65Health()
+        {
+            // Arrange
+            var expactedHealth = 65;
+
+            // Act
+            _character.Damage(80);
+
+            // Assert
+            Assert.That(_character.Health, Is.EqualTo(expactedHealth));
+        }
+
         #endregion
     }
 }
