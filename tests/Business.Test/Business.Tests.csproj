@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="OneTimeSetUpOneTimeTearDownTests.cs" />
     <Compile Include="SetUpTearDownTests.cs" />
     <Compile Include="CharacterTests.cs" />
     <Compile Include="SerialPortParserTest.cs" />
