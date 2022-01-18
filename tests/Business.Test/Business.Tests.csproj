@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="OneTimeSetUpOneTimeTearDownTests.cs" />
+    <Compile Include="ParametrizeMethodTests.cs" />
     <Compile Include="SetUpTearDownTests.cs" />
     <Compile Include="CharacterTests.cs" />
     <Compile Include="SerialPortParserTest.cs" />
