@@ -3,14 +3,34 @@ using System.IO;
 
 namespace Business.TestDouble.Untestable
 {
+    // Проблема написания тестов для такого рода класса заключается в том
+    // что он может получать "внешние ресурсы" которые мы не знаем как себя ведут
+    // и они могут получать данные из разных источников например баз данных 
+    // которые во время выполнения тестов могут быть недоступны и тесту нас получатся
+    // будут временно недоступны. Для использования дублеров необходимо отрефокторить код и 
+    // исползовать иныверсию зависимостей те реализация классов или подлючение их через
+    // соответствующие интерфейсы
     public class Customer
     {
-        private readonly Logger _logger = new Logger();
+        private readonly IDbGateway _dbGateway;
+        private readonly ILogger _logger;
+
+        public IDbGateway DbGateway { get; set; }
+
+        public ILogger Logger { get; set; }
+
+        // Сделать инверисию зависимостей можно двумя способоми
+        // 1 - через конструктор
+        // 2 - через публичные свойства
+        public Customer(IDbGateway dbGateway, ILogger logger)
+        {
+            _dbGateway = dbGateway;
+            _logger = logger;
+        }
 
         public decimal CalculateWage(int id)
         {
-            DbGateway gateway = new DbGateway();
-            WorkingStatistics ws = gateway.GetWorkingStatistics(id);
+            WorkingStatistics ws = _dbGateway.GetWorkingStatistics(id);
 
             decimal wage;
             if (ws.PayHourly)
@@ -27,7 +47,7 @@ namespace Business.TestDouble.Untestable
         }
     }
 
-    internal class Logger
+    internal class Logger : ILogger
     {
         public void Info(string s)
         {
@@ -35,7 +55,7 @@ namespace Business.TestDouble.Untestable
         }
     }
 
-    public class DbGateway
+    public class DbGateway : IDbGateway
     {
         public WorkingStatistics GetWorkingStatistics(int id)
         {

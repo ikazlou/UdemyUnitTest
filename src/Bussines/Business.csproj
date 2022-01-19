@@ -55,6 +55,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Singletons.cs" />
     <Compile Include="TestDouble\Testable\Sut.cs" />
+    <Compile Include="TestDouble\Untestable\IDbGateway.cs" />
+    <Compile Include="TestDouble\Untestable\ILogger.cs" />
     <Compile Include="TestDouble\Untestable\Sut.cs" />
     <Compile Include="WorkingStatistics.cs" />
   </ItemGroup>
