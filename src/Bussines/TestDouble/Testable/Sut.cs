@@ -72,6 +72,11 @@ namespace Business.TestDouble.Testable
             throw new global::Business.TestDouble.Untestable.NoConnection();
         }
 
+        public void SetWorkingStatistic(WorkingStatistics workingStatistics)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool Connected { get; }
     }
 

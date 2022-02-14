@@ -55,6 +55,11 @@
     <Compile Include="CharacterTests.cs" />
     <Compile Include="SerialPortParserTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestDoubles\DbGatewayFake.cs" />
+    <Compile Include="TestDoubles\DbGatewayMock.cs" />
+    <Compile Include="TestDoubles\DbGatewaySpy.cs" />
+    <Compile Include="TestDoubles\DbGatewayStub.cs" />
+    <Compile Include="TestDoubles\LoggerDummy.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
