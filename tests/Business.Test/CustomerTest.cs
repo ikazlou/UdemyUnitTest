@@ -1,10 +1,65 @@
 ﻿using Business;
 using Business.TestDouble.Testable;
 using Business2.Test.TestDoubles;
+using NSubstitute;
+using NSubstitute.Core;
 using NUnit.Framework;
 
 namespace Business2.Test
 {
+    [TestFixture]
+    public class CustomerTestsWithMockingFramefork
+    {
+        [Test]
+        public void CalculateWage_HorlyPayed_ReturnCorrectWage()
+        {
+            // Arrange
+            var gateway = Substitute.For<IDbGateway>();
+            var workingStatistics = new WorkingStatistics() { PayHourly = true, HourSalary = 100, WorkingHours = 10 };
+            const int anyId = 1;
+            gateway.GetWorkingStatistics(anyId).ReturnsForAnyArgs(workingStatistics);
+
+            const decimal expectedWage = 100 * 10;
+            var sut = new Customer(gateway, Substitute.For<ILogger>());
+
+            // Act
+            decimal actual = sut.CalculateWage(anyId);
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(expectedWage).Within(0.1));
+        }
+
+        [Test]
+        public void CalculateWage_PassesCorrectId()
+        {
+            // Arrange
+            const int id = 1;
+
+            var gateway = new DbGatewaySpy();
+            gateway.SetWorkingStatistics(new WorkingStatistics());
+
+            //Set gateWay
+            var gatewayNSub = Substitute.For<IDbGateway>();
+            // Seeting gateWay
+            gatewayNSub.GetWorkingStatistics(id).ReturnsForAnyArgs(new WorkingStatistics());
+
+
+            // Act
+            var sut = new Customer(gateway, new LoggerDummy());
+            sut.CalculateWage(id);
+
+            // Make test system and run act
+            var sutNSub = new Customer(gatewayNSub, Substitute.For<ILogger>());
+            sutNSub.CalculateWage(id);
+
+            // Assert
+            Assert.That(id, Is.EqualTo(gateway.Id));
+
+            //Attention in that case we are not using Assert, we call method NSubstitute
+            gatewayNSub.Received().GetWorkingStatistics(id);
+        }
+    }
+
     [TestFixture]
     public class CustomerTest
     {
