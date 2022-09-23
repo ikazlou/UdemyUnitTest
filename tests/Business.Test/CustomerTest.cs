@@ -3,13 +3,38 @@ using Business.TestDouble.Testable;
 using Business2.Test.TestDoubles;
 using NSubstitute;
 using NSubstitute.Core;
+using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
+using System;
 
 namespace Business2.Test
 {
     [TestFixture]
     public class CustomerTestsWithMockingFramefork
     {
+        [Test]
+        public void CalculateWage_HorlyPayed_ReturnCorrectWage_FullDescripeNSubstitute()
+        {
+            // Arrange
+            var gateway = Substitute.For<IDbGateway>();
+            var workingStatistics = new WorkingStatistics() { PayHourly = true, HourSalary = 100, WorkingHours = 10 };
+            var anyId = 1;
+
+            gateway.GetWorkingStatistics(anyId /*Arg.Any<int>() */).ReturnsForAnyArgs(workingStatistics);
+            //Arg.Any<int>() - показывает что не важно какое значение мыы туда передаем
+            gateway.Connected.Returns(true);
+
+
+            const decimal expectedWage = 100 * 10;
+            var sut = new Customer(gateway, Substitute.For<ILogger>());
+
+            // Act
+            decimal actual = sut.CalculateWage(/*Arg.Any<int>()*/ anyId);
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(expectedWage).Within(0.1));
+        }
+
         [Test]
         public void CalculateWage_HorlyPayed_ReturnCorrectWage()
         {
@@ -27,6 +52,22 @@ namespace Business2.Test
 
             // Assert
             Assert.That(actual, Is.EqualTo(expectedWage).Within(0.1));
+        }
+
+        [Test]
+        public void Calculate_ThrowsException_Returns0()
+        {
+            // Arrange
+            int id = 1;
+            var gateway = Substitute.For<IDbGateway>();
+
+            // Act
+            gateway.GetWorkingStatistics(id).Throws(new InvalidOperationException());
+            var sut = new Customer(gateway, Substitute.For<ILogger>());
+
+            // Assert
+            decimal actual = sut.CalculateWage(id);
+            Assert.That(actual, Is.EqualTo(0));
         }
 
         [Test]

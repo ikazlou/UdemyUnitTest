@@ -16,10 +16,11 @@ namespace Business.TestDouble.Testable
 
         public decimal CalculateWage(int id)
         {
-            //if (!_gateway.Connected)
-            //{
-            //    return 0;
-            //}
+            //    if (!_gateway.Connected)
+            //    {
+            //        return 0;
+            //    }
+
             WorkingStatistics ws = null;
             try
             {

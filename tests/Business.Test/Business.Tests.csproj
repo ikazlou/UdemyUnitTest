@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomerTest.cs" />
+    <Compile Include="DeviceTests.cs" />
     <Compile Include="GroupingTests.cs" />
     <Compile Include="OneTimeSetUpOneTimeTearDownTests.cs" />
     <Compile Include="ParametrizeMethodTests.cs" />

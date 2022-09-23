@@ -57,6 +57,8 @@ namespace Business.TestDouble.Untestable
 
     public class DbGateway : IDbGateway
     {
+        public bool Connected { get; }
+
         public WorkingStatistics GetWorkingStatistics(int id)
         {
             //a real gateway can experience any possible problems
